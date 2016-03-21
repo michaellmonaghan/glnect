@@ -20,24 +20,20 @@ uint8_t * rgb_back = (uint8_t *)&buff1;
 uint8_t * rgb_front = (uint8_t *)&buff2;
 
 void draw() {
-  freenect_process_events(f_ctx);
+  //glClear(GL_COLOR_BUFFER_BIT);
+  //uint8_t test[640*480*3];
+  /*for (int i=0; i < 640*480*3; i+=3) {
+    rgb_front[i] = rand();
+    rgb_front[i+1] = rand();
+    rgb_front[i+2] = rand();
+  }*/
   glDrawPixels(640, 480, GL_RGB, GL_UNSIGNED_BYTE, rgb_front);
   glutSwapBuffers();
 }
 
-void videoCallBack(freenect_device *dev, void *v, uint32_t timestamp) {
-  for (int i=0;i<640*3;i++){
-    for(int j=0;j<240;j++){
-      uint8_t t;
-      int a=i+(640*3*j);
-      int b=i+(640*3*(479-j));
-      t = (uint8_t) ((uint8_t*)v)[a];
-      ((uint8_t*)v)[a]=((uint8_t*)v)[b];
-      ((uint8_t*)v)[b] = t;
-    }
-  }
+void videoCallBack(freenect_device *dev, void *video, uint32_t timestamp) {
   rgb_back = rgb_front;
-  rgb_front= (uint8_t * )v;
+  rgb_front= (uint8_t * )video;
   freenect_set_video_buffer(f_dev, rgb_back);
 }
 
@@ -54,12 +50,12 @@ void initDevice() {
   }
   freenect_set_led(f_dev, LED_RED);
   freenect_set_tilt_degs(f_dev,0);
-  freenect_set_video_callback(f_dev, videoCallBack);
   freenect_frame_mode fm = freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB);
+  freenect_set_video_callback(f_dev, videoCallBack);
   freenect_set_video_mode(f_dev, fm);
   freenect_set_video_buffer(f_dev, rgb_back);
   freenect_start_video(f_dev);
-  freenect_set_led(f_dev, LED_GREEN);
+  //freenect_set_led(f_dev, LED_GREEN);
 }
 
 void initDisplay() {
@@ -72,16 +68,6 @@ void initDisplay() {
 }
 
 int main(int argc, char * argv[]) {
-  for (int i=0; i < 640*480*3; i+=3) {
-    rgb_front[i] = rand();
-    rgb_front[i+1] = rand();
-    rgb_front[i+2] = rand();
-  }
-  for (int i=0; i < 640*480*3; i+=3) {
-    rgb_back[i] = rand();
-    rgb_back[i+1] = rand();
-    rgb_back[i+2] = rand();
-  }
   printf("initializing\n");
   initDevice();
   glutInit(&argc,argv);
