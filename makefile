@@ -12,5 +12,3 @@ sdltest: sdltest.c
 
 runsdltest: sdltest
 	./sdltest
-a:
-	echo CFLAGS
