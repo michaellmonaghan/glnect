@@ -1,6 +1,3 @@
-
-SDL_CFLAGS=$(shell sdl2-config --libs --cflags)
-
 run: test
 	./test
 
