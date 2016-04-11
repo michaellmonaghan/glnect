@@ -6,9 +6,3 @@ run: test
 
 test: test.c
 	gcc -lglut -lGL -lGLEW -lfreenect -o test test.c
-
-sdltest: sdltest.c
-	gcc $(SDL_CFLAGS) -lGL -o sdltest sdltest.c
-
-runsdltest: sdltest
-	./sdltest
